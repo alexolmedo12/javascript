@@ -1,13 +1,52 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Simulador de Tienda</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Entregable2 - Simulador de Tienda</title>
+<link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-   <h1>Simulador de Tienda Online</h1>
-git 
+<main class="container">
+<h1>Simulador de Tienda</h1>
+
+
+<section class="catalogo">
+<h2>Catálogo</h2>
+<div id="productos-list" class="grid"></div>
+<button id="agregar-demo" class="btn">Agregar productos demo</button>
+</section>
+
+
+<section class="form-section">
+<h2>Agregar producto (form)</h2>
+<form id="producto-form">
+<input type="text" id="prod-nombre" placeholder="Nombre" required />
+<input type="number" id="prod-precio" placeholder="Precio" min="0" required />
+<input type="text" id="prod-img" placeholder="URL imagen (opcional)" />
+<button class="btn" type="submit">Agregar producto</button>
+</form>
+</section>
+
+
+<section class="carrito">
+<h2>Carrito</h2>
+<div id="carrito-list"></div>
+<div class="carrito-footer">
+<strong id="carrito-total">Total: $0</strong>
+<div>
+<button id="vaciar-carrito" class="btn">Vaciar carrito</button>
+<button id="guardar-carrito" class="btn">Guardar carrito</button>
+<button id="finalizar-compra" class="btn primary">Finalizar compra</button>
+</div>
+</div>
+</section>
+
+
+<section class="mensajes" id="mensajes" aria-live="polite"></section>
+</main>
+
+
 <script src="javascript/main.js"></script>
 </body>
 </html>

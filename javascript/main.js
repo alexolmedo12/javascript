@@ -1,75 +1,70 @@
-// Variables y arrays
-let productos = ["Remera", "Pantalón", "Zapatillas", "Campera"];
-let precios = [2500, 4500, 8000, 6500];
-let carrito = [];
-let total = 0;
+// Productos demo
+let productos = [
+{id:1, nombre:"Remera", precio:2500},
+{id:2, nombre:"Pantalón", precio:4500}
+];
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-// Función para mostrar productos
-function mostrarProductos() {
-   let lista = "Productos disponibles:\\n";
-   for(let i = 0; i < productos.length; i++) {
-       lista += (i + 1) + ". " + productos[i] + " - $" + precios[i] + "\\n";
-   }
-   alert(lista);
+
+const $productos = document.getElementById("productos");
+const $carrito = document.getElementById("carrito");
+const $total = document.getElementById("total");
+const $mensaje = document.getElementById("mensaje");
+
+
+function renderProductos(){
+$productos.innerHTML = "";
+productos.forEach(p => {
+let div = document.createElement("div");
+div.className = "card";
+div.innerHTML = `<strong>${p.nombre}</strong><br>$${p.precio}<br><button>Agregar</button>`;
+div.querySelector("button").onclick = ()=> agregarAlCarrito(p);
+$productos.appendChild(div);
+});
 }
 
-// Función para agregar al carrito
-function agregarProducto() {
-   mostrarProductos();
-   let opcion = prompt("Ingrese el número del producto (1-4):");
-   
-   if(opcion >= 1 && opcion <= 4) {
-       let indice = opcion - 1;
-       carrito.push(productos[indice]);
-       total = total + precios[indice];
-       alert("¡" + productos[indice] + " agregado al carrito!");
-       console.log("Producto agregado: " + productos[indice] + " - $" + precios[indice]);
-   } else {
-       alert("Opción inválida");
-   }
+
+function renderCarrito(){
+$carrito.innerHTML = "";
+carrito.forEach((c,i)=>{
+let div = document.createElement("div");
+div.className = "card";
+div.innerHTML = `${c.nombre} - $${c.precio} <button>Quitar</button>`;
+div.querySelector("button").onclick = ()=> { carrito.splice(i,1); actualizar(); };
+$carrito.appendChild(div);
+});
+$total.textContent = "Total: $"+carrito.reduce((acc,el)=>acc+el.precio,0);
 }
 
-// Función para mostrar carrito
-function mostrarCarrito() {
-   if(carrito.length == 0) {
-       alert("El carrito está vacío");
-   } else {
-       let resumen = "Tu carrito:\\n";
-       for(let i = 0; i < carrito.length; i++) {
-           resumen += "- " + carrito[i] + "\\n";
-       }
-       resumen += "\\nTotal: $" + total;
-       alert(resumen);
-       console.log("Carrito actual:", carrito);
-       console.log("Total: $" + total);
-   }
+
+function agregarAlCarrito(p){
+carrito.push(p);
+actualizar("Agregado: "+p.nombre);
 }
 
-// Función principal
-function iniciarSimulador() {
-   let continuar = true;
-   
-   alert("¡Bienvenido a la tienda online!");
-   
-   while(continuar) {
-       let opcion = prompt("¿Qué deseas hacer?\\n1. Ver productos\\n2. Agregar al carrito\\n3. Ver carrito\\n4. Salir");
-       
-       if(opcion == "1") {
-           mostrarProductos();
-       } else if(opcion == "2") {
-           agregarProducto();
-       } else if(opcion == "3") {
-           mostrarCarrito();
-       } else if(opcion == "4") {
-           continuar = false;
-           if(carrito.length > 0) {
-               alert("Gracias por tu compra. Total: $" + total);
-           } else {
-               alert("¡Hasta la próxima!");
-           }
-       } else {
-           alert("Opción inválida");
-       }
-   }
+
+function actualizar(msj=""){
+localStorage.setItem("carrito", JSON.stringify(carrito));
+renderCarrito();
+if(msj){ $mensaje.textContent = msj; setTimeout(()=> $mensaje.textContent="",2000); }
 }
 
+
+// Eventos
+document.getElementById("form-producto").onsubmit = e => {
+e.preventDefault();
+const nombre = document.getElementById("nombre").value;
+const precio = Number(document.getElementById("precio").value);
+productos.push({id:Date.now(), nombre, precio});
+renderProductos();
+e.target.reset();
+};
+
+
+document.getElementById("vaciar").onclick = ()=> { carrito=[]; actualizar("Carrito vacío"); };
+document.getElementById("finalizar").onclick = ()=> { carrito=[]; actualizar("Compra finalizada"); };
+
+
+// Inicialización
+renderProductos();
+renderCarrito();
